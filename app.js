@@ -115,3 +115,118 @@ Generated: Eaglepoint.ai Tracker`;
 function exportData() {
     alert('Export functionality - would save current state to CSV/JSON');
 }
+
+let devReports = [];
+
+function submitDevReport() {
+    const name = document.getElementById('reportDevName').value;
+    const date = document.getElementById('reportDate').value;
+    const tasks = document.getElementById('reportTasks').value;
+    const inProgress = document.getElementById('reportInProgress').value;
+    const blockers = document.getElementById('reportBlockers').value;
+    const help = document.getElementById('reportHelp').value;
+    
+    if (!name) {
+        alert('Please select your name');
+        return;
+    }
+    if (!date) {
+        alert('Please select a date');
+        return;
+    }
+    if (!tasks) {
+        alert('Please list your completed tasks');
+        return;
+    }
+    
+    const report = {
+        id: Date.now(),
+        name: name,
+        date: date,
+        tasks: tasks,
+        inProgress: inProgress,
+        blockers: blockers,
+        help: help,
+        timestamp: new Date().toLocaleString()
+    };
+    
+    let storedReports = JSON.parse(localStorage.getItem('devReports') || '[]');
+    storedReports.push(report);
+    localStorage.setItem('devReports', JSON.stringify(storedReports));
+    
+    document.getElementById('reportTasks').value = '';
+    document.getElementById('reportInProgress').value = '';
+    document.getElementById('reportBlockers').value = '';
+    document.getElementById('reportHelp').value = '';
+    
+    alert('Report submitted successfully!');
+    loadSubmissions();
+}
+
+function loadSubmissions() {
+    let storedReports = JSON.parse(localStorage.getItem('devReports') || '[]');
+    
+    const filterDev = document.getElementById('filterDev').value;
+    const filterDate = document.getElementById('filterDate').value;
+    
+    let filtered = storedReports;
+    if (filterDev) {
+        filtered = filtered.filter(r => r.name === filterDev);
+    }
+    if (filterDate) {
+        filtered = filtered.filter(r => r.date === filterDate);
+    }
+    
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    const container = document.getElementById('submissionsList');
+    
+    if (filtered.length === 0) {
+        container.innerHTML = '<div class="checkin-card"><div class="checkin-message">No reports found. Try adjusting filters.</div></div>';
+        return;
+    }
+    
+    container.innerHTML = filtered.map(r => `
+        <div class="checkin-card ${r.blockers ? 'blocker' : ''}">
+            <div class="checkin-header">
+                <strong>${r.name}</strong>
+                <span class="checkin-time">${r.date} - ${r.timestamp}</span>
+            </div>
+            <div class="checkin-message"><strong>Tasks Completed:</strong> ${r.tasks}</div>
+            ${r.inProgress ? `<div class="checkin-response"><strong>In Progress:</strong> ${r.inProgress}</div>` : ''}
+            ${r.blockers ? `<div class="checkin-response" style="margin-top:8px"><strong>Blockers:</strong> ${r.blockers}</div>` : '<div class="checkin-response" style="margin-top:8px"><strong>Blockers:</strong> None</div>'}
+            ${r.help ? `<div class="checkin-response" style="margin-top:8px"><strong>Needs Help With:</strong> ${r.help}</div>` : ''}
+        </div>
+    `).join('');
+}
+
+function filterReports() {
+    loadSubmissions();
+}
+
+function exportReports() {
+    let storedReports = JSON.parse(localStorage.getItem('devReports') || '[]');
+    
+    if (storedReports.length === 0) {
+        alert('No reports to export');
+        return;
+    }
+    
+    let csv = 'Date,Developer,Tasks Completed,In Progress,Blockers,Needs Help With,Submitted\n';
+    
+    storedReports.forEach(r => {
+        csv += `"${r.date}","${r.name}","${r.tasks.replace(/"/g, '""')}","${r.inProgress || ''}","${r.blockers || ''}","${r.help || ''}","${r.timestamp}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dev-reports-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+document.getElementById('reportDate').valueAsDate = new Date();
+
+loadSubmissions();
