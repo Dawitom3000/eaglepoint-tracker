@@ -535,64 +535,25 @@ Generated: Eaglepoint.ai Tracker
                 </div>
             </div>
 
-<div class="form-group">
-                <label>Select Your Tasks (check all that apply)</label>
-                <div class="task-checkboxes">
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task1">
-                        <span>Medical Image Annotation</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task2">
-                        <span>Text Data Labeling</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task3">
-                        <span>Code Review</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task4">
-                        <span>Clinical Data Review</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task5">
-                        <span>Audio Transcription</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task6">
-                        <span>Document Processing</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="task7">
-                        <span>QA/Quality Check</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="taskOther">
-                        <span>Other (specify below)</span>
-                    </label>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Task Name / ID</label>
+                    <input type="text" id="taskName" placeholder="e.g., TK-2025-0456 or Data labeling batch 3">
                 </div>
-            </div>
-
-            <div class="task-status-section" style="margin-bottom: 20px;">
-                <label style="display:block; margin-bottom:10px; color:#00d4ff;">Task Status</label>
-                <div class="form-row">
-                    <div class="form-group">
-                        <select id="taskStatus">
-                            <option value="">Select status...</option>
-                            <option value="done">✅ Done</option>
-                            <option value="in_progress">🔄 In Progress</option>
-                            <option value="not_started">⏸ Not Started</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="taskId" placeholder="Task ID (e.g., TK-2025-0456)">
-                    </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="taskStatus">
+                        <option value="">Select status...</option>
+                        <option value="done">✅ Done</option>
+                        <option value="in_progress">🔄 In Progress</option>
+                        <option value="not_started">⏸ Not Started</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Task Description / Notes</label>
-                <textarea id="reportDescription" placeholder="Describe what you did, progress made, or any details about the task..."></textarea>
+                <label>Description / Progress Notes</label>
+                <textarea id="reportDescription" placeholder="Describe what you accomplished, progress made, or any details about the task..."></textarea>
             </div>
 
             <div class="form-group">

@@ -121,49 +121,16 @@ let devReports = [];
 function submitDevReport() {
     const name = document.getElementById('reportDevName').value;
     const date = document.getElementById('reportDate').value;
+    const taskName = document.getElementById('taskName').value;
     const taskStatus = document.getElementById('taskStatus').value;
-    const taskId = document.getElementById('taskId').value;
     const description = document.getElementById('reportDescription').value;
     const blockers = document.getElementById('reportBlockers').value;
     const help = document.getElementById('reportHelp').value;
     
-    const selectedTasks = [];
-    const taskOptions = [
-        { id: 'task1', label: 'Medical Image Annotation' },
-        { id: 'task2', label: 'Text Data Labeling' },
-        { id: 'task3', label: 'Code Review' },
-        { id: 'task4', label: 'Clinical Data Review' },
-        { id: 'task5', label: 'Audio Transcription' },
-        { id: 'task6', label: 'Document Processing' },
-        { id: 'task7', label: 'QA/Quality Check' }
-    ];
-    
-    taskOptions.forEach(opt => {
-        if (document.getElementById(opt.id).checked) {
-            selectedTasks.push(opt.label);
-        }
-    });
-    
-    if (document.getElementById('taskOther').checked) {
-        selectedTasks.push('Other');
-    }
-    
-    if (!name) {
-        alert('Please select your name');
-        return;
-    }
-    if (!date) {
-        alert('Please select a date');
-        return;
-    }
-    if (!taskStatus) {
-        alert('Please select task status');
-        return;
-    }
-    if (selectedTasks.length === 0) {
-        alert('Please select at least one task type');
-        return;
-    }
+    if (!name) { alert('Please select your name'); return; }
+    if (!date) { alert('Please select a date'); return; }
+    if (!taskName) { alert('Please enter a task name or ID'); return; }
+    if (!taskStatus) { alert('Please select task status'); return; }
     
     const statusLabels = {
         'done': '✅ Done',
@@ -173,15 +140,11 @@ function submitDevReport() {
     
     const report = {
         id: Date.now(),
-        name: name,
-        date: date,
-        tasks: selectedTasks.join(', '),
+        name, date,
+        taskName,
         status: taskStatus,
         statusLabel: statusLabels[taskStatus],
-        taskId: taskId,
-        description: description,
-        blockers: blockers,
-        help: help,
+        description, blockers, help,
         timestamp: new Date().toLocaleString()
     };
     
@@ -189,13 +152,11 @@ function submitDevReport() {
     storedReports.push(report);
     localStorage.setItem('devReports', JSON.stringify(storedReports));
     
+    document.getElementById('taskName').value = '';
     document.getElementById('taskStatus').value = '';
-    document.getElementById('taskId').value = '';
     document.getElementById('reportDescription').value = '';
     document.getElementById('reportBlockers').value = '';
     document.getElementById('reportHelp').value = '';
-    taskOptions.forEach(opt => document.getElementById(opt.id).checked = false);
-    document.getElementById('taskOther').checked = false;
     
     alert('Report submitted successfully!');
     loadSubmissions();
@@ -231,8 +192,7 @@ function loadSubmissions() {
                 <span class="checkin-time">${r.date} - ${r.timestamp}</span>
             </div>
             <div class="checkin-message">
-                <strong>Task Type:</strong> ${r.tasks}
-                ${r.taskId ? `<br><strong>Task ID:</strong> ${r.taskId}` : ''}
+                <strong>Task:</strong> ${r.taskName}
             </div>
             <div class="checkin-response">
                 <strong>Status:</strong> <span class="status-badge" style="display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; background:${r.status === 'done' ? '#00ff88' : r.status === 'in_progress' ? '#ffd93d' : '#ff6b6b'}; color:#000;">${r.statusLabel}</span>
@@ -256,10 +216,10 @@ function exportReports() {
         return;
     }
     
-    let csv = 'Date,Developer,Tasks Completed,In Progress,Blockers,Needs Help With,Submitted\n';
+    let csv = 'Date,Developer,Task,Status,Description,Blockers,Needs Help With,Submitted\n';
     
     storedReports.forEach(r => {
-        csv += `"${r.date}","${r.name}","${r.tasks.replace(/"/g, '""')}","${r.inProgress || ''}","${r.blockers || ''}","${r.help || ''}","${r.timestamp}"\n`;
+        csv += `"${r.date}","${r.name}","${r.taskName.replace(/"/g, '""')}","${r.statusLabel || ''}","${(r.description || '').replace(/"/g, '""')}","${(r.blockers || '').replace(/"/g, '""')}","${(r.help || '').replace(/"/g, '""')}","${r.timestamp}"\n`;
     });
     
     const blob = new Blob([csv], { type: 'text/csv' });
