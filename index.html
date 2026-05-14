@@ -3,642 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eaglepoint.ai Developer Tracker</title>
+    <title>Eaglepoint Daily Pulse Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <div class="logo">🦅 Eaglepoint.ai Tracker</div>
-        <div class="status-badge">⚠️ SLA Risk: HIGH</div>
-    </div>
+    <header class="app-header">
+        <div>
+            <p class="eyebrow">Eaglepoint.ai PM tracker</p>
+            <h1>Daily Pulse</h1>
+        </div>
+        <div class="header-summary">
+            <span>Aquila: finished tasks</span>
+            <strong>This site: today&apos;s risk</strong>
+            <small id="storageStatus">Local preview mode</small>
+        </div>
+    </header>
 
-    <nav class="nav">
-        <button class="nav-btn active" onclick="showTab('dashboard')">📊 Dashboard</button>
-        <button class="nav-btn" onclick="showTab('checkin')">💬 Daily Check-in</button>
-        <button class="nav-btn" onclick="showTab('tracking')">📈 Task Tracking</button>
-        <button class="nav-btn" onclick="showTab('gm-report')">📋 GM Report</button>
-        <button class="nav-btn" onclick="showTab('pip')">🚨 PIP Tracker</button>
-        <button class="nav-btn" onclick="showTab('timeline')">📅 Day 1 Plan</button>
-        <button class="nav-btn" onclick="showTab('dev-report')">📝 Developer Report</button>
+    <nav class="nav" aria-label="Tracker views">
+        <button class="nav-btn active" type="button" data-tab="daily">Daily Pulse</button>
+        <button class="nav-btn" type="button" data-tab="blockers">Blockers</button>
+        <button class="nav-btn" type="button" data-tab="summary">Weekly Summary</button>
     </nav>
 
-    <div class="container">
-        <div id="dashboard" class="tab-content active">
-            <div class="alert-box warning">
-                <span>⚠️</span>
+    <main class="container">
+        <section class="metric-grid" aria-label="Today summary">
+            <article class="metric-card">
+                <span>Submitted Today</span>
+                <strong id="todayCount">0</strong>
+            </article>
+            <article class="metric-card">
+                <span>Open Blockers</span>
+                <strong id="blockerCount">0</strong>
+            </article>
+            <article class="metric-card">
+                <span>Waiting / Clarifying</span>
+                <strong id="watchCount">0</strong>
+            </article>
+            <article class="metric-card">
+                <span>No Update Yet</span>
+                <strong id="missingCount">0</strong>
+            </article>
+        </section>
+
+        <section id="daily" class="tab-content active">
+            <div class="section-heading">
                 <div>
-                    <strong>Critical Issue:</strong> 8 of 12 developers below 25-task quota. 
-                    M&A deal at risk. Immediate action required.
+                    <p class="eyebrow">Developer input</p>
+                    <h2>Today&apos;s pulse</h2>
                 </div>
+                <button class="secondary-btn" type="button" id="exportPulseBtn">Export CSV</button>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Team Size</h3>
-                    <div class="value">12</div>
-                    <div class="sub">Developers</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Avg Tasks/Developer</h3>
-                    <div class="value" style="color: #ffd93d;">18.5</div>
-                    <div class="sub">Target: 25 | Gap: -6.5</div>
-                </div>
-                <div class="stat-card">
-                    <h3>On Track</h3>
-                    <div class="value" style="color: #00ff88;">4</div>
-                    <div class="sub">🟢 33% of team</div>
-                </div>
-                <div class="stat-card">
-                    <h3>At Risk</h3>
-                    <div class="value" style="color: #ff6b6b;">8</div>
-                    <div class="sub">🔴 Need intervention</div>
-                </div>
-            </div>
-
-            <h3 class="section-title">Developer Performance Overview</h3>
-            <table class="developers-table">
-                <thead>
-                    <tr>
-                        <th>Developer</th>
-                        <th>Tasks This Month</th>
-                        <th>Progress</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="devTable">
-                    <tr>
-                        <td>禹</td>
-                        <td>24/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-green" style="width: 96%"></div></div></td>
-                        <td><span class="status-dot status-green"></span>On Track</td>
-                        <td><button class="action-btn" onclick="openCheckin('禹')">Check-in</button></td>
-                    </tr>
-                    <tr>
-                        <td>Tad</td>
-                        <td>23/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-green" style="width: 92%"></div></div></td>
-                        <td><span class="status-dot status-green"></span>On Track</td>
-                        <td><button class="action-btn" onclick="openCheckin('Tad')">Check-in</button></td>
-                    </tr>
-                    <tr>
-                        <td>Liul</td>
-                        <td>21/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-yellow" style="width: 84%"></div></div></td>
-                        <td><span class="status-dot status-yellow"></span>At Risk</td>
-                        <td><button class="action-btn" onclick="openCheckin('Liul')">Check-in</button></td>
-                    </tr>
-                    <tr>
-                        <td>Nati</td>
-                        <td>19/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-yellow" style="width: 76%"></div></div></td>
-                        <td><span class="status-dot status-yellow"></span>At Risk</td>
-                        <td><button class="action-btn" onclick="openCheckin('Nati')">Check-in</button></td>
-                    </tr>
-                    <tr>
-                        <td>Bisrat</td>
-                        <td>15/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-red" style="width: 60%"></div></div></td>
-                        <td><span class="status-dot status-orange"></span>Struggling</td>
-                        <td><button class="action-btn" onclick="openCheckin('Bisrat')">Check-in</button></td>
-                    </tr>
-                    <tr>
-                        <td>Simon</td>
-                        <td>12/25</td>
-                        <td><div class="progress-bar"><div class="progress-fill progress-red" style="width: 48%"></div></div></td>
-                        <td><span class="status-dot status-red"></span>Critical</td>
-                        <td><button class="action-btn" onclick="openCheckin('Simon')">Check-in</button></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div style="margin-top: 30px;">
-                <h3 class="section-title">Quick Actions</h3>
-                <div class="quick-actions">
-                    <button class="quick-btn" onclick="showTab('checkin')">📤 Send Daily Check-in</button>
-                    <button class="quick-btn" onclick="showTab('gm-report')">📋 Generate GM Report</button>
-                    <button class="quick-btn" onclick="exportData()">💾 Export Data</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="checkin" class="tab-content">
-            <h3 class="section-title">💬 Daily Check-in System</h3>
-            
-            <div class="alert-box info">
-                <span>💡</span>
-                <div><strong>Tip:</strong> Frame check-ins as blocker removal, not surveillance. Developers will be honest if they trust you're helping, not watching.</div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Developer Name</label>
-                    <select id="checkinDev">
-                        <option>禹</option>
-                        <option>Tad</option>
-                        <option>Liul</option>
-                        <option>Nati</option>
-                        <option>Bisrat</option>
-                        <option>Simon</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Today's Status</label>
-                    <select id="checkinStatus">
-                        <option value="green">✅ On Track</option>
-                        <option value="yellow">🟡 Need Support</option>
-                        <option value="red">🔴 Blocked</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>What's your progress on today's tasks?</label>
-                <textarea id="checkinProgress" placeholder="e.g., Completed 3 of 5 tasks. Task 4 is waiting on client feedback..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Any blockers or challenges?</label>
-                <textarea id="checkinBlocker" placeholder="If none, write 'No blockers'"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>What do you need from me?</label>
-                <textarea id="checkinHelp" placeholder="Equipment, clarification, client info, etc."></textarea>
-            </div>
-
-            <button class="action-btn" onclick="submitCheckin()">Submit Check-in</button>
-
-            <div style="margin-top: 40px;">
-                <h3 class="section-title">Recent Check-ins</h3>
-                <div id="checkinLog">
-                    <div class="checkin-card blocker">
-                        <div class="checkin-header">
-                            <strong>Simon</strong>
-                            <span class="checkin-time">Today, 9:30 AM</span>
-                        </div>
-                        <div class="checkin-message">"Struggling with complex medical annotation tasks. Need more clarity on guidelines."</div>
-                        <div class="checkin-response">✅ Action: Requested guideline document from senior developer. Follow-up scheduled for 2 PM.</div>
-                    </div>
-                    <div class="checkin-card">
-                        <div class="checkin-header">
-                            <strong>Bisrat</strong>
-                            <span class="checkin-time">Today, 9:15 AM</span>
-                        </div>
-                        <div class="checkin-message">"Internet was down at home this morning. Back online now."</div>
-                        <div class="checkin-response">✅ Noted. No action needed.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tracking" class="tab-content">
-            <h3 class="section-title">📈 Real-Time Task Tracking</h3>
-            
-            <div class="alert-box">
-                <span>🔍</span>
-                <div><strong>Aquila Gap:</strong> Aquila only logs completions. You need this layer to see work-in-progress.</div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Developer</label>
-                    <select>
-                        <option>All Developers</option>
-                        <option>禹</option>
-                        <option>Tad</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Task Complexity</label>
-                    <select>
-                        <option>All Types</option>
-                        <option>Simple (2-4 hrs)</option>
-                        <option>Medium (4-8 hrs)</option>
-                        <option>Complex (8-16 hrs)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Date Range</label>
-                    <input type="date" value="2025-05-01">
-                </div>
-            </div>
-
-            <table class="developers-table" style="margin-top: 20px;">
-                <thead>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Developer</th>
-                        <th>Complexity</th>
-                        <th>Assigned</th>
-                        <th>Status</th>
-                        <th>Est. Hours</th>
-                        <th>Actual</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>TK-2025-0456</td>
-                        <td>Simon</td>
-                        <td>Complex</td>
-                        <td>May 5</td>
-                        <td><span class="status-dot status-yellow"></span>In Progress</td>
-                        <td>12 hrs</td>
-                        <td>8 hrs</td>
-                    </tr>
-                    <tr>
-                        <td>TK-2025-0457</td>
-                        <td>Liul</td>
-                        <td>Medium</td>
-                        <td>May 6</td>
-                        <td><span class="status-dot status-green"></span>Completed</td>
-                        <td>6 hrs</td>
-                        <td>5 hrs</td>
-                    </tr>
-                    <tr>
-                        <td>TK-2025-0458</td>
-                        <td>Nati</td>
-                        <td>Complex</td>
-                        <td>May 6</td>
-                        <td><span class="status-dot status-red"></span>Blocked</td>
-                        <td>14 hrs</td>
-                        <td>2 hrs</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="gm-report" class="tab-content">
-            <h3 class="section-title">📋 Weekly GM Report Generator</h3>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Week of</label>
-                    <input type="date" id="reportWeek" value="2025-05-05">
-                </div>
-                <div class="form-group">
-                    <label>Total Tasks Completed</label>
-                    <input type="number" id="reportTotal" value="222">
-                </div>
-                <div class="form-group">
-                    <label>Target</label>
-                    <input type="number" id="reportTarget" value="300">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Key Wins (What went well?)</label>
-                <textarea id="reportWins">- 2 developers hit quota for first time this month
-- Average task completion time reduced by 15%
-- No SLA breaches on priority client tasks</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Blockers & Challenges</label>
-                <textarea id="reportChallenges">- Internet infrastructure issues affecting 3 remote developers
-- Complex task types taking 40% longer than estimated
-- 2 developers need additional training on medical annotation guidelines</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Risks to Contract</label>
-                <textarea id="reportRisks">- 8 of 12 developers still below 25-task quota
-- If current trend continues, we'll deliver 74% of monthly target
-- Client may escalate if May delivery falls below 80%</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Next Week Focus</label>
-                <textarea id="reportNext">1. Complete Week 1 task complexity audit to validate quota feasibility
-2. Launch PIP for 3 critical-underperforming developers
-3. Implement daily check-in system across team
-4. Request infrastructure support from GM for remote workers</textarea>
-            </div>
-
-            <button class="action-btn" onclick="generateReport()">Generate Report</button>
-
-            <div style="margin-top: 30px;">
-                <h3 class="section-title">Report Preview</h3>
-                <div class="report-preview" id="reportOutput">
-WEEKLY GM REPORT - Week of May 5, 2025
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📊 PERFORMANCE SUMMARY
-• Total Tasks Completed: 222 / 300 (74%)
-• Developers On Track: 4/12 (33%)
-• Developers At Risk: 8/12 (67%)
-
-✅ KEY WINS
-• 2 developers hit quota for first time this month
-• Average task completion time reduced by 15%
-• No SLA breaches on priority client tasks
-
-⚠️ CHALLENGES & BLOCKERS
-• Internet infrastructure issues affecting 3 remote developers
-• Complex task types taking 40% longer than estimated
-• 2 developers need additional training on medical annotation guidelines
-
-🚨 RISKS TO CONTRACT
-• 8 of 12 developers still below 25-task quota
-• If current trend continues, we'll deliver 74% of monthly target
-• Client may escalate if May delivery falls below 80%
-
-📌 NEXT WEEK PRIORITIES
-1. Complete Week 1 task complexity audit to validate quota feasibility
-2. Launch PIP for 3 critical-underperforming developers
-3. Implement daily check-in system across team
-4. Request infrastructure support from GM for remote workers
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Generated: Eaglepoint.ai Tracker
-                </div>
-            </div>
-        </div>
-
-        <div id="pip" class="tab-content">
-            <h3 class="section-title">🚨 PIP Tracker (Performance Improvement Plan)</h3>
-            
-            <div class="alert-box">
-                <span>⚠️</span>
-                <div>Use PIP when developer is below 40% quota AND not responding to regular check-ins. 2-week structured intervention.</div>
-            </div>
-
-            <div class="pip-phase">
-                <h4>Phase 1: Days 1-5 (Immediate Intervention)</h4>
-                <div class="form-group">
-                    <label>Developer</label>
-                    <select id="pipDev1">
-                        <option>Simon</option>
-                        <option>Bisrat</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Root Cause Analysis</label>
-                    <textarea>Task complexity too high. Lacking clear guidelines for medical annotations. Internet reliability issues at home.</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Action Plan</label>
-                    <textarea>1. Pair with senior developer (禹) for 2 hrs/day
-2. Provide simplified guideline document
-3. Discuss flexible hours to work around internet issues
-4. Daily 15-min check-in (not weekly)</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Target for Week 1</label>
-                    <input type="number" value="12" placeholder="Tasks to complete">
-                </div>
-            </div>
-
-            <div class="pip-phase">
-                <h4>Phase 2: Days 6-10 (Intensive Support)</h4>
-                <div class="form-group">
-                    <label>Progress Review</label>
-                    <textarea>Week 1 completed: 8 tasks (below 12 target). Improvement in quality but still slow. Guidance document helped.</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Adjusted Actions</label>
-                    <textarea>1. Extend pair programming to 3 hrs/day
-2. Assign only medium-complexity tasks this week
-3. Provide progress bonus incentive</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Target for Week 2</label>
-                    <input type="number" value="15" placeholder="Tasks to complete">
-                </div>
-            </div>
-
-            <div class="pip-phase">
-                <h4>Phase 3: Days 11-14 (Decision Point)</h4>
-                <div class="form-group">
-                    <label>Final Outcome</label>
-                    <select>
-                        <option>Select outcome...</option>
-                        <option>✅ Success - Back on track</option>
-                        <option>⚠️ Partial - Extended PIP</option>
-                        <option>❌ Failed - Recommend separation</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>GM Notes</label>
-                    <textarea></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div id="timeline" class="tab-content">
-            <h3 class="section-title">📅 Day 1 Action Plan - Eaglepoint.ai</h3>
-            
-            <div class="timeline">
-                <div class="timeline-item critical">
-                    <div class="timeline-date">Morning - Before 10 AM</div>
-                    <div class="timeline-content">
-                        <h4>1. Get Aquila Admin Access</h4>
-                        <p>Walk in calm and curious: <em>"I want to make sure I'm not adding reporting burden to the team, so I'd like to understand what data I can pull from Aquila directly. Can someone walk me through what's visible on the admin side?"</em></p>
-                    </div>
-                </div>
-
-                <div class="timeline-item critical">
-                    <div class="timeline-date">Morning - 10:30 AM</div>
-                    <div class="timeline-content">
-                        <h4>2. Send GM Signal (5-minute DM)</h4>
-                        <p>Message to GM: <em>"Got Aquila access. Want to understand the priority - should I focus on: (a) identifying who's stuck and why, (b) getting the tracking system in place, or (c) first impressions on team dynamics? Want to make sure I'm working on what matters most to you."</em></p>
-                        <p>This does two things: shows initiative and gets alignment.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Mid-morning - 11 AM</div>
-                    <div class="timeline-content">
-                        <h4>3. Observe Team in Action</h4>
-                        <p>Don't talk to developers yet. Watch: How do they work? What's the vibe? Who's talking to whom? Where do they sit? This is reconnaissance, not intervention.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">Lunch - 12:30 PM</div>
-                    <div class="timeline-content">
-                        <h4>4. Casual 1-on-1s (Optional)</h4>
-                        <p>Join a developer for lunch if appropriate. Ask: <em>"What are you working on that's interesting? Anything you wish was easier?"</em> No agenda. Just listen.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item critical">
-                    <div class="timeline-date">Afternoon - 2 PM</div>
-                    <div class="timeline-content">
-                        <h4>5. Send First Check-ins (if appropriate)</h4>
-                        <p>Start with 1-2 developers who seem most approachable. Not a formal meeting - just a Slack DM: <em>"Hey [name], I'm [your name]. Just getting oriented this week - happy to help with anything that's slowing you down. Let me know."</em></p>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-date">End of Day - 5 PM</div>
-                    <div class="timeline-content">
-                        <h4>6. Document Everything</h4>
-                        <p>Write in your tracker: Who did you talk to? What did you learn about their work? What's the infrastructure situation? What's the team vibe? This becomes your baseline.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 30px;">
-                <h3 class="section-title">First Week Priorities</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-item">
-                        <input type="checkbox">
-                        <span>Day 1-2: Get full Aquila access and understand task types</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox">
-                        <span>Day 2-3: Complete casual 1-on-1s with all 12 developers</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox">
-                        <span>Day 3: Launch daily check-in system</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox">
-                        <span>Day 4: Task Complexity Audit - ask each dev how long tasks actually take</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox">
-                        <span>Day 5: First GM Report with data-driven findings</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Developer Report Tab -->
-        <div id="dev-report" class="tab-content">
-            <h3 class="section-title">📝 Daily Developer Report</h3>
-            
-            <div class="alert-box info">
-                <span>💡</span>
-                <div><strong>For Developers:</strong> Submit your daily report here. Your PM will review it.</div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Your Name</label>
-                    <select id="reportDevName">
-                        <option value="">Select your name</option>
-                        <option>禹</option>
-                        <option>Tad</option>
-                        <option>Liul</option>
-                        <option>Nati</option>
-                        <option>Bisrat</option>
-                        <option>Simon</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="reportDate">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Task Name / ID</label>
-                    <input type="text" id="taskName" placeholder="e.g., TK-2025-0456 or Data labeling batch 3">
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="taskStatus">
-                        <option value="">Select status...</option>
-                        <option value="done">✅ Done</option>
-                        <option value="in_progress">🔄 In Progress</option>
-                        <option value="not_started">⏸ Not Started</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Description / Progress Notes</label>
-                <textarea id="reportDescription" placeholder="Describe what you accomplished, progress made, or any details about the task..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Any Blockers or Challenges?</label>
-                <textarea id="reportBlockers" placeholder="Describe any blockers - technical issues, need clarification, equipment problems, etc."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>What do you need help with?</label>
-                <textarea id="reportHelp" placeholder="Equipment, training, clarification, client info, etc."></textarea>
-            </div>
-
-            <button class="action-btn" onclick="submitDevReport()">Submit Daily Report</button>
-
-            <div style="margin-top: 40px;">
-                <h3 class="section-title">📋 PM View: Recent Submissions</h3>
-                <div class="form-row" style="margin-bottom: 15px;">
-                    <div class="form-group">
-                        <label>Filter by Developer</label>
-                        <select id="filterDev" onchange="filterReports()">
-                            <option value="">All Developers</option>
+            <form id="pulseForm" class="panel form-panel">
+                <div class="form-row">
+                    <label>
+                        Name
+                        <select id="developerName" required>
+                            <option value="">Select developer</option>
                             <option>禹</option>
                             <option>Tad</option>
                             <option>Liul</option>
                             <option>Nati</option>
                             <option>Bisrat</option>
                             <option>Simon</option>
+                            <option>Other</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Filter by Date</label>
-                        <input type="date" id="filterDate" onchange="filterReports()">
-                    </div>
+                    </label>
+                    <label>
+                        Aquila task ID
+                        <input id="taskId" type="text" placeholder="TK-2025-0456" required>
+                    </label>
                 </div>
-                <div id="submissionsList">
-                    <div class="checkin-card">
-                        <div class="checkin-header">
-                            <strong>禹</strong>
-                            <span class="checkin-time">May 11, 2025 - 5:30 PM</span>
-                        </div>
-                        <div class="checkin-message"><strong>Tasks Completed:</strong> 4 tasks - Medical image annotations, code review for TK-2025-0460</div>
-                        <div class="checkin-response"><strong>In Progress:</strong> Working on clinical data review task</div>
-                        <div class="checkin-response" style="margin-top:8px"><strong>Blockers:</strong> None</div>
-                    </div>
-                    <div class="checkin-card">
-                        <div class="checkin-header">
-                            <strong>Tad</strong>
-                            <span class="checkin-time">May 11, 2025 - 5:15 PM</span>
-                        </div>
-                        <div class="checkin-message"><strong>Tasks Completed:</strong> 3 tasks - Data labeling batch complete</div>
-                        <div class="checkin-response"><strong>In Progress:</strong> Waiting for client feedback on TK-2025-0455</div>
-                        <div class="checkin-response" style="margin-top:8px"><strong>Blockers:</strong> Internet was slow this morning</div>
-                    </div>
+
+                <div class="form-row">
+                    <label>
+                        Current status
+                        <select id="pulseStatus" required>
+                            <option value="on_track">On track</option>
+                            <option value="needs_clarification">Need clarification</option>
+                            <option value="blocked">Blocked</option>
+                            <option value="waiting">Waiting for review/client/system</option>
+                        </select>
+                    </label>
+                    <label>
+                        Expected finish
+                        <select id="expectedFinish" required>
+                            <option value="today">Today</option>
+                            <option value="tomorrow">Tomorrow</option>
+                            <option value="two_plus_days">2+ days</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                    </label>
                 </div>
-                <button class="quick-btn" onclick="exportReports()">📥 Export Reports to CSV</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal" id="checkinModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Check-in with <span id="modalDevName"></span></h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="form-group">
-                <label>Current Status</label>
-                <select id="modalStatus">
-                    <option value="green">✅ On Track</option>
-                    <option value="yellow">🟡 Need Support</option>
-                    <option value="red">🔴 Blocked</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Progress Update</label>
-                <textarea id="modalProgress" placeholder="What's happening with your tasks?"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Blockers</label>
-                <textarea id="modalBlocker" placeholder="Anything blocking you?"></textarea>
-            </div>
-            <button class="action-btn" onclick="submitModalCheckin()">Submit</button>
-        </div>
-    </div>
+                <label>
+                    Short progress note
+                    <textarea id="progressNote" placeholder="What is happening with the current task?"></textarea>
+                </label>
 
+                <label>
+                    Help needed
+                    <textarea id="helpNeeded" placeholder="Guideline, review, system access, client clarification, internet issue, etc."></textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button class="primary-btn" type="submit">Submit Pulse</button>
+                    <p id="formStatus" role="status"></p>
+                </div>
+            </form>
+
+            <div class="section-heading compact">
+                <div>
+                    <p class="eyebrow">PM view</p>
+                    <h2>Latest by developer</h2>
+                </div>
+            </div>
+            <div id="latestPulseList" class="card-list"></div>
+        </section>
+
+        <section id="blockers" class="tab-content">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Action queue</p>
+                    <h2>Open blockers</h2>
+                </div>
+                <button class="secondary-btn" type="button" id="clearResolvedBtn">Clear Resolved</button>
+            </div>
+            <div id="blockerList" class="card-list"></div>
+        </section>
+
+        <section id="summary" class="tab-content">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Friday report</p>
+                    <h2>Weekly summary</h2>
+                </div>
+                <button class="secondary-btn" type="button" id="copySummaryBtn">Copy Summary</button>
+            </div>
+
+            <div class="panel form-panel">
+                <div class="form-row">
+                    <label>
+                        Aquila completed tasks
+                        <input id="aquilaCompleted" type="text" inputmode="numeric" pattern="[0-9]*" value="0">
+                    </label>
+                    <label>
+                        Weekly target
+                        <input id="weeklyTarget" type="text" inputmode="numeric" pattern="[0-9]*" value="75">
+                    </label>
+                </div>
+
+                <label>
+                    Wins
+                    <textarea id="weeklyWins" placeholder="What went well this week?"></textarea>
+                </label>
+
+                <label>
+                    Risks
+                    <textarea id="weeklyRisks" placeholder="What still threatens delivery?"></textarea>
+                </label>
+
+                <label>
+                    Next focus
+                    <textarea id="weeklyNext" placeholder="What will you focus on next week?"></textarea>
+                </label>
+            </div>
+
+            <pre id="summaryOutput" class="report-preview"></pre>
+        </section>
+    </main>
+
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

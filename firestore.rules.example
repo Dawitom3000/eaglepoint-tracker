@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /dailyPulses/{pulseId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    match /weeklySummaries/{summaryId} {
+      allow read, write: if false;
+    }
+  }
+}
